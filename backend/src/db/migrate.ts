@@ -1,4 +1,4 @@
-import { pool } from '../config/db.js';
+import { db } from '../config/db.js';
 
 const createTables = async () => {
     const queryText = `
@@ -52,7 +52,7 @@ const createTables = async () => {
   `;
 
     try {
-        await pool.query(queryText);
+        await db.any(queryText);
         console.log('All database tables verified / created successfully.');
         process.exit(0);
     } catch (err) {
