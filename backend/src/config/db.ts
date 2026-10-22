@@ -1,14 +1,19 @@
-import pkg from 'pg';
+import pgPromise from 'pg-promise';
 import dotenv from 'dotenv';
 
+// Load environment variables
 dotenv.config();
 
-const { Pool } = pkg;
+// Initialize pg-promise instance
+const pgp = pgPromise({});
 
-export const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-});
+const connectionString = process.env.DATABASE_URL;
 
-pool.on('connect', () => {
-    console.log('Database connected successfully via connection pool.');
-});
+if (!connectionString) {
+    throw new Error('DATABASE_URL is not defined in environment variables.');
+}
+
+// Create the database connection instance
+const db = pgp(connectionString);
+
+export { db, pgp };
