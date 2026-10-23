@@ -6,7 +6,7 @@ const createTables = async () => {
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         quantity INTEGER NOT NULL DEFAULT 0,
-        cost DECIMAL(10, 2) NOT NULL DEFAULT 0.00
+        cost DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
@@ -20,7 +20,7 @@ const createTables = async () => {
         serial_number VARCHAR(100),
         status device_status NOT NULL DEFAULT 'acquired',
         purchase_price DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
-        sold_price DECIMAL(10, 2)
+        sold_price DECIMAL(10, 2),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
