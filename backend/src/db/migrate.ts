@@ -5,19 +5,23 @@ const createTables = async () => {
     CREATE TABLE IF NOT EXISTS parts (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
-        stock_quantity INTEGER NOT NULL DEFAULT 0,
-        unit_cost DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
-        purchase_link VARCHAR(512)
+        quantity INTEGER NOT NULL DEFAULT 0,
+        cost DECIMAL(10, 2) NOT NULL DEFAULT 0.00
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
+    CREATE TYPE device_status AS ENUM ('acquired', 'broken', 'in_repair', 'refurbished', 'listed', 'sold');
+    CREATE TYPE repair_status AS ENUM ('queue', 'in_progress', 'waiting_for_parts', 'completed');
+    
     CREATE TABLE IF NOT EXISTS devices (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         category VARCHAR(100) NOT NULL,
         serial_number VARCHAR(100),
-        status VARCHAR(50) NOT NULL DEFAULT 'acquired',
+        status device_status NOT NULL DEFAULT 'acquired',
         purchase_price DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
         sold_price DECIMAL(10, 2)
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS repairs (
@@ -25,7 +29,7 @@ const createTables = async () => {
         device_id INTEGER REFERENCES devices(id) ON DELETE CASCADE,
         title VARCHAR(255) NOT NULL,
         description TEXT,
-        status VARCHAR(50) NOT NULL DEFAULT 'queue',
+        status repair_status NOT NULL DEFAULT 'queue',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 

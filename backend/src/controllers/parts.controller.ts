@@ -12,18 +12,18 @@ export const getParts = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const createPart = async (req: Request, res: Response): Promise<void> => {
-    const { name, sku, quantity, min_stock, location } = req.body;
+    const { name, quantity, cost } = req.body;
 
     try {
         const query = `
-      INSERT INTO parts (name, sku, quantity, min_stock, location)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO parts (name, quantity, cost)
+      VALUES ($1, $2, $3)
       RETURNING *;
     `;
-        const values = [name, sku, quantity || 0, min_stock || 0, location];
+        const values = [name, quantity, cost];
         const result = await db.one(query, values);
 
-        res.status(201).json(result.rows[0]);
+        res.status(201).json(result);
     } catch (err) {
         console.error('Error creating part:', err);
         res.status(500).json({ error: 'Internal server error' });
