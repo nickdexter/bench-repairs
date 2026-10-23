@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import partsRouter from './routes/parts.routes.js';
 import { db } from './config/db.js';
+import { errorHandler } from './middleware/errorHandler.js';
 
 dotenv.config();
 
@@ -24,6 +25,8 @@ app.get('/health', async (req: Request, res: Response) => {
 
 // API routes
 app.use('/api/parts', partsRouter)
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
