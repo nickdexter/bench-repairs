@@ -45,8 +45,7 @@ export const updatePart = async (req: Request<{ id: string }>, res: Response): P
         UPDATE parts
         SET name = COALESCE($1, name),
             quantity = COALESCE($2, quantity),
-            cost = COALESCE($3, cost),
-            updated_at = NOW()
+            cost = COALESCE($3, cost)
         WHERE id = $4
         RETURNING *;
     `;
