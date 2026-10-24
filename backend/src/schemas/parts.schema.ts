@@ -6,7 +6,7 @@ export const createPartSchema = z.object({
     cost: z.number().positive('Cost must be greater than zero'),
 });
 
-export const updatePartSchema = createPartSchema;
+export const updatePartSchema = createPartSchema.partial();
 
 // Export the inferred TypeScript types for controllers to use
 export type CreatePartInput = z.infer<typeof createPartSchema>;
