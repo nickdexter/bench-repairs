@@ -2,6 +2,7 @@ import express, { type Express, type Request, type Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import partsRouter from './routes/parts.routes.js';
+import devicesRouter from './routes/devices.routes.js';
 import { db } from './config/db.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
@@ -23,6 +24,7 @@ app.get('/health', async (req: Request, res: Response) => {
 
 // API routes
 app.use('/api/parts', partsRouter);
+app.use('/api/devices', devicesRouter);
 
 // Global error handler
 app.use(errorHandler);
