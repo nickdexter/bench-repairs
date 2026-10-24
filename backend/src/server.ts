@@ -24,7 +24,7 @@ app.get('/health', async (req: Request, res: Response) => {
 });
 
 // API routes
-app.use('/api/parts', partsRouter)
+app.use('/api/parts', partsRouter);
 
 app.use(errorHandler);
 
