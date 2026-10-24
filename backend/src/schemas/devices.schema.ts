@@ -12,4 +12,14 @@ export const createDeviceSchema = z.object({
     sold_price: z.number().min(0).optional(),
 });
 
+// Dedicated update schema to avoid defaults from the create schema
+export const updateDeviceSchema = z.object({
+    name: z.string().min(1, 'Name is required').trim().optional(),
+    category: z.string().min(1, 'Category is required').trim().optional(),
+    serial_number: z.string().trim().optional(),
+    status: z.enum(['acquired', 'broken', 'in_repair', 'refurbished', 'listed', 'sold']).optional(),
+    purchase_price: z.number().min(0, 'Price cannot be negative').optional(),
+    sold_price: z.number().min(0).optional(),
+});
+
 export type CreateDeviceInput = z.infer<typeof createDeviceSchema>;
