@@ -38,13 +38,15 @@ export const createPart = async (req: Request, res: Response): Promise<void> => 
 
 export const updatePart = async (req: Request<{ id: string }>, res: Response): Promise<void> => {
     const partId = parseIdParam(req.params.id);
-
     const { name, quantity, cost } = req.body;
 
-    // TODO: update to allow single parameters to be sent and updated?
+    // COALESCE keeps existing column values if the incoming request body field is undefined
     const query = `
         UPDATE parts
-        SET name = $1, quantity = $2, cost = $3
+        SET name = COALESCE($1, name),
+            quantity = COALESCE($2, quantity),
+            cost = COALESCE($3, cost),
+            updated_at = NOW()
         WHERE id = $4
         RETURNING *;
     `;
@@ -56,7 +58,7 @@ export const updatePart = async (req: Request<{ id: string }>, res: Response): P
     }
 
     sendSuccess(res, updatedPart, 200);
-}
+};
 
 export const updatePartStock = async (req: Request<{ id: string }>, res: Response): Promise<void> => {
     const partId = parseIdParam(req.params.id);
