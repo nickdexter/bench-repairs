@@ -2,10 +2,11 @@ import { type NextFunction, type Request, type Response } from 'express';
 import { db } from '../config/db.js';
 import { AppError } from '../errors/AppError.js';
 import { parseIdParam } from '../utils/validators.js';
+import { sendSuccess } from '../utils/response.js';
 
 export const getParts = async (req: Request, res: Response): Promise<void> => {
     const parts = await db.any('SELECT * FROM parts ORDER BY name DESC');
-    res.status(200).json(parts);
+    sendSuccess(res, parts, 200);
 };
 
 export const getPart = async (req: Request<{ id: string }>, res: Response): Promise<void> => {
@@ -13,7 +14,8 @@ export const getPart = async (req: Request<{ id: string }>, res: Response): Prom
 
     const query: string = 'SELECT * FROM parts WHERE id = $1';
     const part = await db.oneOrNone(query, [partId]);
-    res.status(200).json(part);
+
+    sendSuccess(res, part, 200);
 };
 
 export const createPart = async (req: Request, res: Response): Promise<void> => {
@@ -25,9 +27,9 @@ export const createPart = async (req: Request, res: Response): Promise<void> => 
       RETURNING *;
     `;
 
-    const result = await db.one(query, [name, quantity, cost]);
+    const newPart = await db.one(query, [name, quantity, cost]);
 
-    res.status(201).json(result);
+    sendSuccess(res, newPart, 201);
 };
 
 export const updatePart = async (req: Request<{ id: string }>, res: Response): Promise<void> => {
@@ -49,10 +51,7 @@ export const updatePart = async (req: Request<{ id: string }>, res: Response): P
         throw new AppError('Part not found', 404, 'NOT_FOUND');
     }
 
-    res.status(200).json({
-        success: true,
-        data: updatedPart,
-    });
+    sendSuccess(res, updatedPart, 200);
 }
 
 export const updatePartStock = async (req: Request<{ id: string }>, res: Response): Promise<void> => {
@@ -73,10 +72,7 @@ export const updatePartStock = async (req: Request<{ id: string }>, res: Respons
         throw new AppError('Part not found', 404, 'NOT_FOUND');
     }
 
-    res.status(200).json({
-        success: true,
-        data: updatedPart,
-    });
+    sendSuccess(res, updatedPart, 200);
 }
 
 export const deletePart = async (req: Request<{ id: string }>, res: Response): Promise<void> => {
@@ -88,7 +84,8 @@ export const deletePart = async (req: Request<{ id: string }>, res: Response): P
     if (!deletedPart) {
         throw new AppError('Part not found', 404, 'NOT_FOUND');
     }
-    res.status(200).json(deletedPart);
+
+    sendSuccess(res, deletedPart, 200);
 
 
 }
