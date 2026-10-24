@@ -13,7 +13,11 @@ export const getPart = async (req: Request<{ id: string }>, res: Response): Prom
     const partId = parseIdParam(req.params.id);
 
     const query: string = 'SELECT * FROM parts WHERE id = $1';
-    const part = await db.oneOrNone(query, [partId]);
+    const part = await db.one(query, [partId]);
+
+    if (!part) {
+        throw new AppError('Part not found', 404, 'NOT_FOUND');
+    }
 
     sendSuccess(res, part, 200);
 };
