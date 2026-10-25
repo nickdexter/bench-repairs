@@ -7,6 +7,7 @@ import repairsRouter from './routes/repairs.routes.js';
 import { db } from './config/db.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import morgan from 'morgan';
+import compression from 'compression';
 
 const app: Express = express();
 
@@ -14,6 +15,8 @@ app.use(cors());
 app.use(express.json());
 app.use(helmet());
 app.use(morgan('dev'));
+app.use(compression());
+
 
 // Health check endpoint with database connectivity check
 app.get('/health', async (req: Request, res: Response) => {
