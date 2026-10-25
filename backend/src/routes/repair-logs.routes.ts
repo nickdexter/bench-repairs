@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { validate } from '../middleware/validate.js';
 import { createRepairLogSchema, updateRepairLogSchema } from '../schemas/repair-log.schema.js';
-import { createRepairLog, deleteRepairLog, getRepairLog, getRepairLogs, updateRepairLog } from '../controllers/repair-log.controller.js';
+import { createRepairLog, deleteRepairLog, getRepairLog, getRepairLogs, updateRepairLog } from '../controllers/repair-logs.controller.js';
 
 const router = Router({ mergeParams: true });
 
