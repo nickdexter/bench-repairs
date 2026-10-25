@@ -12,9 +12,13 @@ export const getDevices = async (req: Request, res: Response): Promise<void> => 
 
 export const getDevice = async (req: Request<{ id: string }>, res: Response): Promise<void> => {
     const deviceId = parseIdParam(req.params.id);
-    const parts = await db.any('SELECT FROM devices WHERE id = $1', [deviceId]);
+    const device = await db.oneOrNone('SELECT * FROM devices WHERE id = $1', [deviceId]);
 
-    sendSuccess(res, parts, 200);
+    if (!device) {
+        throw new AppError('Device not found', 404, 'NOT_FOUND');
+    }
+
+    sendSuccess(res, device, 200);
 }
 
 export const createDevice = async (req: Request, res: Response): Promise<void> => {
@@ -55,7 +59,7 @@ export const updateDevice = async (req: Request<{ id: string }>, res: Response):
         throw new AppError('Device not found', 404, 'NOT_FOUND');
     }
 
-    sendSuccess(res, updatedDevice, 201);
+    sendSuccess(res, updatedDevice, 204);
 }
 
 export const deleteDevice = async (req: Request<{ id: string }>, res: Response): Promise<void> => {
