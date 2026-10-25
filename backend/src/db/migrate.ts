@@ -26,8 +26,7 @@ const createTables = async () => {
 
     CREATE TABLE IF NOT EXISTS repairs (
         id SERIAL PRIMARY KEY,
-        device_id INTEGER REFERENCES devices(id) ON DELETE CASCADE,
-        title VARCHAR(255) NOT NULL,
+        device_id INTEGER NOT NULL UNIQUE REFERENCES devices(id) ON DELETE CASCADE,
         description TEXT,
         status repair_status NOT NULL DEFAULT 'queue',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
