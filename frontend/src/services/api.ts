@@ -109,3 +109,19 @@ export async function createPart(data: Omit<Part, 'id' | 'created_at'>): Promise
     });
     return handleResponse<Part>(res);
 }
+
+export async function updatePart(id: number, data: Partial<Part>): Promise<Part> {
+    const res = await fetch(`${API_BASE}/parts/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+    return handleResponse<Part>(res);
+}
+
+export async function deletePart(id: number): Promise<void> {
+    const res = await fetch(`${API_BASE}/parts/${id}`, {
+        method: 'DELETE',
+    });
+    await handleResponse<null>(res);
+}
