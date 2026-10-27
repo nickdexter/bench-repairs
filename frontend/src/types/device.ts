@@ -6,7 +6,7 @@ export interface Device {
     category: string;
     serial_number: string | null;
     status: DeviceStatus;
-    purchase_price: string; // PostgreSQL decimals come across as strings via pg-promise
-    sold_price: string | null;
+    purchase_price: string | number; // PostgreSQL decimals come across as strings via pg-promise
+    sold_price: string | number | null;
     created_at: string;
 }

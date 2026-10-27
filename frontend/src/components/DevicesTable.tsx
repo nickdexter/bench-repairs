@@ -1,10 +1,16 @@
+import { useState } from 'react'
 import type { Device, DeviceStatus } from "../types/device"
 import { formatDatabaseString } from "../utils/formatDatabaseString"
 import reactLogo from '../assets/react.svg'
+import { deleteDevice } from "../services/api"
+import { useToast } from "../context/ToastContext"
+import DeleteConfirmationModal from './DeleteConfirmationModal'
 
 interface DevicesTableProps {
+    onEditClick(device: Device): void
     devices: Device[]
     onAddClick: () => void
+    onDeleted: (id: number | string) => void
 }
 
 const statusStyles: Record<DeviceStatus, string> = {
@@ -17,6 +23,26 @@ const statusStyles: Record<DeviceStatus, string> = {
 }
 
 export default function DevicesTable(props: DevicesTableProps) {
+    const { showToast } = useToast();
+    const [deviceToDelete, setDeviceToDelete] = useState<{ id: number | string; name: string } | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const handleDeleteConfirm = async () => {
+        if (!deviceToDelete) return;
+
+        setIsDeleting(true);
+        try {
+            await deleteDevice(deviceToDelete.id);
+            props.onDeleted(deviceToDelete.id);
+            showToast(`Deleted ${deviceToDelete.name} successfully`, 'success');
+            setDeviceToDelete(null);
+        } catch (err: any) {
+            showToast(err.message || 'Failed to delete device', 'error');
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
     return (
         <div className="px-4 sm:px-6 lg:px-8">
             <div className="sm:flex sm:items-center">
@@ -59,6 +85,9 @@ export default function DevicesTable(props: DevicesTableProps) {
                                     <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0">
                                         <span className="sr-only">Edit</span>
                                     </th>
+                                    <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0">
+                                        <span className="sr-only">Delete</span>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200 bg-white">
@@ -89,9 +118,20 @@ export default function DevicesTable(props: DevicesTableProps) {
                                         <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">${device.purchase_price}</td>
                                         <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">{device.sold_price ? `$${device.sold_price}` : '-'}</td>
                                         <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                                            <a href="#" className="text-indigo-600 hover:text-indigo-900">
+                                            <button
+                                                onClick={() => props.onEditClick(device)}
+                                                className="text-indigo-600 hover:text-indigo-900"
+                                            >
                                                 Edit<span className="sr-only">, {device.name}</span>
-                                            </a>
+                                            </button>
+                                        </td>
+                                        <td className="relative whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                                            <button
+                                                onClick={() => setDeviceToDelete({ id: device.id, name: device.name })}
+                                                className="text-rose-600 hover:text-rose-900"
+                                            >
+                                                Delete<span className="sr-only">, {device.name}</span>
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
@@ -100,6 +140,16 @@ export default function DevicesTable(props: DevicesTableProps) {
                     </div>
                 </div>
             </div>
+
+            <DeleteConfirmationModal
+                isOpen={!!deviceToDelete}
+                onClose={() => setDeviceToDelete(null)}
+                onConfirm={handleDeleteConfirm}
+                title="Delete Device"
+                message={`Are you sure you want to delete ${deviceToDelete?.name}? This action cannot be undone and will permanently remove this device from your database.`}
+                confirmText="Delete"
+                isDeleting={isDeleting}
+            />
         </div>
     )
 }

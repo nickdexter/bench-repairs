@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import { getDevices } from '../services/api';
 import type { Device } from '../types/device';
 import DevicesTable from '../components/DevicesTable';
-import AddDeviceModal from '../components/AddDeviceModal';
+import DeviceModal from '../components/DeviceModal';
 
 export default function Devices() {
     const [devices, setDevices] = useState<Device[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
+    const [deviceToEdit, setDeviceToEdit] = useState<Device | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const fetchDevices = () => {
         getDevices()
@@ -20,23 +21,37 @@ export default function Devices() {
         fetchDevices();
     }, []);
 
-    if (loading) return <p className="p-6">Loading devices...</p>;
+    if (loading) return <p className="p-6 text-sm text-gray-500">Loading devices...</p>;
 
     return (
-        <div className="py-6">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-                <h1 className="text-xl font-bold text-gray-900">Devices</h1>
-            </div>
+        <div>
+            <h1 className="text-xl font-bold">Devices</h1>
+            <div className="py-6">
+                <DevicesTable
+                    devices={devices}
+                    onAddClick={() => {
+                        setDeviceToEdit(null); // Clear any edit state
+                        setIsModalOpen(true);
+                    }}
+                    onDeleted={(deletedId) => {
+                        setDevices(prevDevices => prevDevices.filter(d => d.id !== deletedId));
+                    }}
+                    onEditClick={(device) => {
+                        setDeviceToEdit(device); // Set the device to edit
+                        setIsModalOpen(true);   // Open the modal
+                    }}
+                />
 
-            <div className="max-w-7xl mx-auto mt-4">
-                <DevicesTable devices={devices} onAddClick={() => setIsAddModalOpen(true)} />
+                <DeviceModal
+                    isOpen={isModalOpen}
+                    onClose={() => {
+                        setIsModalOpen(false);
+                        setDeviceToEdit(null);
+                    }}
+                    onSuccess={fetchDevices}
+                    deviceToEdit={deviceToEdit}
+                />
             </div>
-
-            <AddDeviceModal
-                isOpen={isAddModalOpen}
-                onClose={() => setIsAddModalOpen(false)}
-                onDeviceAdded={fetchDevices}
-            />
         </div>
     );
 }
