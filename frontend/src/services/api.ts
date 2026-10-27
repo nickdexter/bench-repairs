@@ -39,14 +39,14 @@ export async function createDevice(data: Omit<Device, 'id' | 'created_at'>): Pro
 
 export async function updateDevice(id: number, data: Partial<Device>): Promise<Device> {
     const res = await fetch(`${API_BASE}/devices/${id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
     });
     return handleResponse<Device>(res);
 }
 
-export async function deleteDevice(id: number): Promise<void> {
+export async function deleteDevice(id: number | string): Promise<void> {
     const res = await fetch(`${API_BASE}/devices/${id}`, {
         method: 'DELETE',
     });
@@ -78,7 +78,7 @@ export async function createRepair(data: Omit<Repair, 'id' | 'created_at'>): Pro
 
 export async function updateRepair(id: number, data: Partial<Repair>): Promise<Repair> {
     const res = await fetch(`${API_BASE}/repairs/${id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
     });
