@@ -8,9 +8,11 @@ import { useToast } from '../context/ToastContext';
 interface DeviceModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSuccess: () => void; // Triggered after successful create or update
-    deviceToEdit?: Device | null; // Optional: if present, we are editing
+    onSuccess: () => void;
+    deviceToEdit?: Device | null;
 }
+
+const CATEGORY_OPTIONS = ['Console', 'Handheld', 'Controller', 'Accessory'];
 
 export default function DeviceModal({ isOpen, onClose, onSuccess, deviceToEdit }: DeviceModalProps) {
     const { showToast } = useToast();
@@ -18,7 +20,7 @@ export default function DeviceModal({ isOpen, onClose, onSuccess, deviceToEdit }
 
     // Form state
     const [name, setName] = useState('');
-    const [category, setCategory] = useState('');
+    const [category, setCategory] = useState<string>(CATEGORY_OPTIONS[0]);
     const [serialNumber, setSerialNumber] = useState('');
     const [status, setStatus] = useState<DeviceStatus>('acquired');
     const [purchasePrice, setPurchasePrice] = useState('');
@@ -36,7 +38,7 @@ export default function DeviceModal({ isOpen, onClose, onSuccess, deviceToEdit }
         } else {
             // Reset to defaults for "Add" mode
             setName('');
-            setCategory('');
+            setCategory(CATEGORY_OPTIONS[0]);
             setSerialNumber('');
             setStatus('acquired');
             setPurchasePrice('');
@@ -46,7 +48,7 @@ export default function DeviceModal({ isOpen, onClose, onSuccess, deviceToEdit }
 
     if (!isOpen) return null;
 
-    const handleSubmit = async (e: React.SubmitEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
@@ -112,13 +114,17 @@ export default function DeviceModal({ isOpen, onClose, onSuccess, deviceToEdit }
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Category</label>
-                                <input
-                                    type="text"
-                                    required
+                                <select
                                     value={category}
                                     onChange={(e) => setCategory(e.target.value)}
                                     className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                                />
+                                >
+                                    {CATEGORY_OPTIONS.map((opt) => (
+                                        <option key={opt} value={opt}>
+                                            {opt}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
 
                             <div>
