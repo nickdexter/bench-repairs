@@ -1,3 +1,5 @@
+import type { Device } from "./device";
+
 export type RepairStatus = 'queue' | 'in_progress' | 'waiting_for_parts' | 'completed';
 
 export interface Repair {
@@ -6,4 +8,5 @@ export interface Repair {
     description: string | null;
     status: RepairStatus;
     created_at: string;
+    device: Device;
 }

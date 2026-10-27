@@ -5,15 +5,44 @@ import { parseIdParam } from "../utils/validators.js";
 import { AppError } from "../errors/AppError.js";
 
 export const getRepairs = async (req: Request, res: Response): Promise<void> => {
-    const repairs = await db.any('SELECT * FROM repairs');
+    const query = `
+        SELECT 
+            r.*,
+            json_build_object(
+                'id', d.id,
+                'name', d.name,
+                'category', d.category,
+                'serial_number', d.serial_number,
+                'status', d.status
+            ) AS device
+        FROM repairs r
+        LEFT JOIN devices d ON r.device_id = d.id;
+    `;
 
+    const repairs = await db.any(query);
     sendSuccess(res, repairs, 200);
 }
 
 export const getRepair = async (req: Request<{ id: string }>, res: Response): Promise<void> => {
     const repairId = parseIdParam(req.params.id);
 
-    const repair = await db.oneOrNone('SELECT * FROM repairs WHERE id = $1', [repairId]);
+    const query = `
+        SELECT 
+            r.*,
+            json_build_object(
+                'id', d.id,
+                'name', d.name,
+                'category', d.category,
+                'serial_number', d.serial_number,
+                'status', d.status
+            ) AS device
+        FROM repairs r
+        LEFT JOIN devices d ON r.device_id = d.id
+        WHERE r.id = $1;
+    `;
+
+    const repair = await db.oneOrNone(query, [repairId]);
+
     if (!repair) {
         throw new AppError('Repair not found', 404, 'NOT_FOUND');
     }
