@@ -3,10 +3,11 @@ import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/re
 import { NavLink, Outlet } from 'react-router'
 import {
     Bars3Icon,
-    DocumentDuplicateIcon,
-    FolderIcon,
     HomeIcon,
     XMarkIcon,
+    WrenchScrewdriverIcon,
+    WrenchIcon,
+    CpuChipIcon
 } from '@heroicons/react/24/outline'
 
 interface NavItem {
@@ -17,9 +18,9 @@ interface NavItem {
 
 const navigation: NavItem[] = [
     { name: 'Dashboard', to: '/', icon: HomeIcon },
-    { name: 'Repairs', to: '/repairs', icon: FolderIcon },
-    { name: 'Devices', to: '/devices', icon: FolderIcon },
-    { name: 'Parts', to: '/parts', icon: DocumentDuplicateIcon },
+    { name: 'Repairs', to: '/repairs', icon: WrenchIcon },
+    { name: 'Devices', to: '/devices', icon: CpuChipIcon },
+    { name: 'Parts', to: '/parts', icon: WrenchScrewdriverIcon },
 ]
 
 export default function AppLayout() {
