@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { createDevice } from '../services/api';
 import type { DeviceStatus } from '../types/device';
+import { useToast } from '../context/ToastContext';
 
 interface AddDeviceModalProps {
     isOpen: boolean;
@@ -18,6 +19,8 @@ export default function AddDeviceModal({ isOpen, onClose, onDeviceAdded }: AddDe
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const { showToast } = useToast();
+
     if (!isOpen) return null;
 
     const handleSubmit = async (e: React.SubmitEvent) => {
@@ -34,6 +37,7 @@ export default function AddDeviceModal({ isOpen, onClose, onDeviceAdded }: AddDe
                 purchase_price: purchasePrice || '0.00',
                 sold_price: soldPrice || null,
             });
+            showToast('Device successfully created!', 'success');
             onDeviceAdded();
             onClose();
             // Reset form
