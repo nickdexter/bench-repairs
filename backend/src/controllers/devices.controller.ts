@@ -59,7 +59,7 @@ export const updateDevice = async (req: Request<{ id: string }>, res: Response):
         throw new AppError('Device not found', 404, 'NOT_FOUND');
     }
 
-    sendSuccess(res, updatedDevice, 204);
+    sendSuccess(res, updatedDevice, 200);
 }
 
 export const deleteDevice = async (req: Request<{ id: string }>, res: Response): Promise<void> => {
