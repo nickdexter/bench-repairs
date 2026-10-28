@@ -20,7 +20,7 @@ export default function RepairLog() {
 
     return (
         <div className="h-full">
-            <form action="#" className="relative bottom-0">
+            <form action="#" className="relative flex h-full flex-col justify-end">
                 <div className="overflow-hidden rounded-lg border border-gray-300 shadow-sm focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500">
                     <label htmlFor="description" className="sr-only">
                         Description

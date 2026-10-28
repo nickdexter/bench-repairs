@@ -35,23 +35,20 @@ export default function RepairDetail() {
             <h1 className="text-xl font-bold">Repair: {repair.device.name}</h1>
 
             {/* 3 column wrapper */}
-            <div className="mt-4 flex min-h-0 w-full flex-1 flex-col lg:flex-row">
-                {/* Left sidebar & main wrapper */}
-                <div className="flex min-h-0 min-w-0 flex-3 flex-col lg:flex-row">
-                    <div className="min-w-0 border px-4 py-6 sm:px-6 lg:flex-1 lg:border-b-0 lg:border-r lg:px-4">
-                        {/* Left column area */}
-                        <RepairIssues />
-                    </div>
-
-                    <div className="min-w-0 px-4 py-6 sm:px-6 lg:flex-2 lg:px-4">
-                        {/* Main area */}
-                        <RepairLog />
-                    </div>
+            <div className="mt-4 grid min-h-0 w-full flex-1 grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row">
+                <div className="min-w-0 border px-4 py-6 sm:px-6 md:col-start-1 md:row-start-1 lg:order-1 lg:flex-1 lg:border-b-0 lg:border-r lg:px-4">
+                    {/* Issues */}
+                    <RepairIssues />
                 </div>
 
-                <div className="min-w-0 flex-1 border px-4 py-6 sm:px-6 lg:border-l lg:border-t-0 lg:px-4">
-                    {/* Right column area */}
+                <div className="min-w-0 border px-4 py-6 sm:px-6 md:col-start-1 md:row-start-2 lg:order-3 lg:flex-1 lg:border-l lg:border-t-0 lg:px-4">
+                    {/* Parts */}
                     <RepairParts />
+                </div>
+
+                <div className="flex min-w-0 flex-col justify-end px-4 py-6 sm:px-6 md:col-start-2 md:row-span-2 md:row-start-1 lg:order-2 lg:flex-[2] lg:px-4">
+                    {/* Logs */}
+                    <RepairLog />
                 </div>
             </div>
         </div>
