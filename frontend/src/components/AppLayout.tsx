@@ -27,7 +27,7 @@ export default function AppLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false)
 
     return (
-        <div>
+        <div className="flex min-h-screen flex-col">
             {/* Mobile Sidebar Drawer */}
             <Transition show={sidebarOpen} as={Fragment}>
                 <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
@@ -148,8 +148,8 @@ export default function AppLayout() {
             </div>
 
             {/* Main Content Area where child routes render */}
-            <main className="py-10 lg:pl-72">
-                <div className="px-4 sm:px-6 lg:px-8">
+            <main className="flex min-h-0 flex-1 flex-col py-10 lg:pl-72">
+                <div className="flex min-h-0 flex-1 flex-col px-4 sm:px-6 lg:px-8">
                     <Outlet />
                 </div>
             </main>

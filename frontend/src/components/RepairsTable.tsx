@@ -2,6 +2,9 @@ import { Fragment } from 'react'
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
 import type { Repair, RepairStatus } from '../types/repair'
+import { timeAgo } from '../utils/timeAgo'
+import reactLogo from '../assets/react.svg'
+import { Link } from 'react-router'
 
 interface RepairsTableProps {
     repairs: Repair[]
@@ -23,9 +26,10 @@ export default function RepairsTable(props: RepairsTableProps) {
         <ul role="list" className="divide-y divide-gray-100">
             {props.repairs.map((repair) => (
                 <li key={repair.id} className="flex items-center justify-between gap-x-6 py-5">
+
                     <div className="min-w-0">
                         <div className="flex items-start gap-x-3">
-                            <p className="text-sm font-semibold leading-6 text-gray-900">{repair.device_id}</p>
+                            <p className="text-sm font-semibold leading-6 text-gray-900">{repair.device.name}</p>
                             <p
                                 className={classNames(
                                     statusStyles[repair.status],
@@ -36,21 +40,26 @@ export default function RepairsTable(props: RepairsTableProps) {
                             </p>
                         </div>
                         <div className="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
+                            {repair.device.serial_number &&
+                                <>
+                                    <p className="whitespace-nowrap">Serial: {repair.device.serial_number}</p>
+                                    <svg viewBox="0 0 2 2" className="h-0.5 w-0.5 fill-current">
+                                        <circle cx={1} cy={1} r={1} />
+                                    </svg>
+                                </>}
+
                             <p className="whitespace-nowrap">
-                                Created at <time dateTime={repair.created_at}>{repair.created_at}</time>
+                                Created <time dateTime={repair.created_at}>{timeAgo(repair.created_at)}</time>
                             </p>
-                            <svg viewBox="0 0 2 2" className="h-0.5 w-0.5 fill-current">
-                                <circle cx={1} cy={1} r={1} />
-                            </svg>
                         </div>
                     </div>
                     <div className="flex flex-none items-center gap-x-4">
-                        {/*<a
-                            href={repair.href}
+                        {<Link
+                            to={`/repairs/${repair.id}`}
                             className="hidden rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:block"
                         >
-                            View project<span className="sr-only">, {repair.device_id}</span>
-                        </a>*/}
+                            View repair<span className="sr-only">, {repair.device_id}</span>
+                        </Link>}
                         <Menu as="div" className="relative flex-none">
                             <MenuButton className="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-900">
                                 <span className="sr-only">Open options</span>
@@ -79,7 +88,7 @@ export default function RepairsTable(props: RepairsTableProps) {
                                             </a>
                                         )}
                                     </MenuItem>
-                                    <Menu.Item>
+                                    <MenuItem>
                                         {({ active }: { active: boolean }) => (
                                             <a
                                                 href="#"
@@ -91,8 +100,8 @@ export default function RepairsTable(props: RepairsTableProps) {
                                                 Move<span className="sr-only">, {repair.device_id}</span>
                                             </a>
                                         )}
-                                    </Menu.Item>
-                                    <Menu.Item>
+                                    </MenuItem>
+                                    <MenuItem>
                                         {({ active }: { active: boolean }) => (
                                             <a
                                                 href="#"
@@ -104,7 +113,7 @@ export default function RepairsTable(props: RepairsTableProps) {
                                                 Delete<span className="sr-only">, {repair.device_id}</span>
                                             </a>
                                         )}
-                                    </Menu.Item>
+                                    </MenuItem>
                                 </MenuItems>
                             </Transition>
                         </Menu>
